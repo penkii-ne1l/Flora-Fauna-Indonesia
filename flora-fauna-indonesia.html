@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nusantara Hayati — Persebaran Flora & Fauna Indonesia</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3ee;--surf:#fff;--ink:#12281f;--mute:#5a6e64;--line:#d3dfd6;--sea:#cfe6e8;--land:#8fb996;--landh:#5f9e6e;--sel:#0e7c86;--acc:#d9482b;--flora:#3f8a3a;--fauna:#b5532a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1a15;--surf:#14281f;--ink:#e6f1ea;--mute:#98b0a3;--line:#24402f;--sea:#0f2a30;--land:#3d6b4a;--landh:#56935f;--sel:#2fb5c0;--acc:#ff7a5a;--flora:#7fd078;--fauna:#f0996a}}
+:root[data-theme="dark"]{--bg:#0c1a15;--surf:#14281f;--ink:#e6f1ea;--mute:#98b0a3;--line:#24402f;--sea:#0f2a30;--land:#3d6b4a;--landh:#56935f;--sel:#2fb5c0;--acc:#ff7a5a;--flora:#7fd078;--fauna:#f0996a}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Source Sans 3",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.1;margin:0}
+header{padding:40px 20px 8px;max-width:1440px;margin:auto}
+h1{font-size:clamp(2.2rem,6vw,4rem);font-weight:800;letter-spacing:-.02em}
+header p{max-width:60ch;color:var(--mute);margin:12px 0 0}
+main{max-width:1440px;margin:auto;padding:16px 20px 60px}
+.mapwrap{background:var(--sea);border-radius:20px;padding:8px;overflow:hidden}
+.mapwrap{overflow-x:auto}svg{width:100%;min-width:1000px;height:auto;display:block}
+.isl{fill:var(--land);stroke:var(--bg);stroke-width:1.6;stroke-linejoin:round;cursor:pointer;transition:fill .2s;filter:drop-shadow(0 2px 2px rgba(0,0,0,.28))}.sea{font:italic 13px "Source Sans 3",sans-serif;fill:var(--mute);opacity:.75;text-anchor:middle}.eq{stroke:var(--ink);stroke-opacity:.18;stroke-width:1;stroke-dasharray:2 5}
+.isl:hover,.isl:focus{fill:var(--landh);outline:none}
+.isl.on{fill:var(--sel)}
+.lbl{font:700 14px "Bricolage Grotesque",sans-serif;fill:var(--ink);pointer-events:none;text-anchor:middle;paint-order:stroke;stroke:var(--bg);stroke-width:3.5;stroke-linejoin:round}.ctx{fill:var(--land);opacity:.28}.gr{stroke:var(--ink);stroke-opacity:.08;stroke-width:.7}
+.wal{stroke:var(--acc);stroke-width:2.5;stroke-dasharray:7 6;fill:none}
+.walt{font:600 12px "Source Sans 3",sans-serif;fill:var(--acc)}
+.ic{font-size:16px;cursor:pointer;text-anchor:middle;dominant-baseline:central;transition:opacity .2s}.ic:hover,.ic:focus{font-size:23px;outline:none}.ic.dim{opacity:.15}
+.info{margin:18px 0 6px;padding:16px 18px;border-left:5px solid var(--sel);background:var(--surf);border-radius:0 12px 12px 0}
+.info h2{font-size:1.5rem;margin-bottom:4px}.info p{margin:0;color:var(--mute)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 16px;align-items:center}
+.chip{border:1.5px solid var(--line);background:var(--surf);color:var(--ink);padding:7px 15px;border-radius:99px;font:600 15px inherit;font-family:inherit;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+input[type=search]{flex:1;min-width:180px;padding:9px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--surf);color:var(--ink);font:inherit}
+:focus-visible{outline:3px solid var(--sel);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.card{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surf);border:1.5px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.card:hover{border-color:var(--sel)}.card:focus-visible{outline:3px solid var(--sel)}
+.em{font-size:2.4rem;line-height:1}
+.card h3{font-size:1.15rem}.sci{font-style:italic;color:var(--mute);font-size:.92rem}
+.tag{font-size:.82rem;font-weight:600}.tag.flora{color:var(--flora)}.tag.fauna{color:var(--fauna)}
+.empty{grid-column:1/-1;padding:30px;text-align:center;color:var(--mute)}
+dialog{border:0;border-radius:20px;padding:0;max-width:560px;width:calc(100% - 28px);background:var(--surf);color:var(--ink);max-height:88vh}
+dialog::backdrop{background:rgba(5,15,10,.6)}
+.dh{padding:22px 22px 8px;display:flex;gap:14px;align-items:center}
+.dh .em{font-size:3.4rem}.dh h2{font-size:1.7rem}
+.db{padding:6px 22px 22px}
+.db dl{margin:14px 0 0;display:grid;grid-template-columns:110px 1fr;gap:8px 12px}
+.db dt{font-weight:600;color:var(--mute)}.db dd{margin:0}
+.fact{margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--bg)}
+.x{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:0;background:var(--bg);color:var(--ink);font-size:20px;cursor:pointer}
+.st{display:inline-block;padding:1px 10px;border-radius:99px;background:var(--bg);font-weight:600}
+footer{max-width:1440px;margin:auto;padding:0 20px 40px;color:var(--mute);font-size:.9rem}
+.box{margin:40px 0 0;padding:22px;background:var(--surf);border:1.5px solid var(--line);border-radius:18px}.box h2{font-size:1.6rem;margin-bottom:8px}.box>p{max-width:75ch}
+.zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:16px 0}.zone{padding:14px 16px;border-radius:14px;background:var(--bg);border-left:5px solid var(--sel)}.zone h3{font-size:1.1rem;margin-bottom:4px}.zone p{margin:0;color:var(--mute);font-size:.97rem}
+.lg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin:14px 0;padding:0;list-style:none}.lg li{display:flex;gap:10px;align-items:flex-start}.lg .st{flex:none;min-width:48px;text-align:center}
+.simgrid{display:grid;grid-template-columns:minmax(240px,320px) 1fr;gap:22px;margin-top:14px}@media(max-width:800px){.simgrid{grid-template-columns:1fr}}
+.ctrl label{display:block;margin-bottom:14px;font-weight:600}.ctrl input[type=range]{width:100%}.ctrl select{width:100%;padding:9px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.presets{display:flex;flex-wrap:wrap;gap:8px}#ch{min-width:0}.ax{font:12px "Source Sans 3",sans-serif;fill:var(--mute)}.gr2{stroke:var(--line);stroke-width:1}
+.key{display:flex;gap:16px;font-size:.9rem;color:var(--mute);margin:6px 0}.key i{display:inline-block;width:22px;border-top:3px solid var(--acc);vertical-align:middle;margin-right:6px}.key i.d{border-top:3px dashed var(--mute)}#res p{margin:8px 0}.note{font-size:.88rem;color:var(--mute)}
+</style>
+</head>
+<body>
+<header>
+<h1>Nusantara Hayati</h1>
+<p>Indonesia punya ribuan pulau, dan tiap pulau punya penghuni khasnya. Klik pulau atau ikon di peta, atau pilih kartu di bawahnya, untuk membaca info lengkap flora dan fauna-nya.</p>
+</header>
+<main>
+<div class="mapwrap">
+<svg viewBox="0 0 826 318" role="group" aria-label="Peta persebaran flora dan fauna Indonesia"><defs><radialGradient id="vg" cx=".5" cy=".5" r=".75"><stop offset=".6" style="stop-color:var(--ink);stop-opacity:0"/><stop offset="1" style="stop-color:var(--ink);stop-opacity:.15"/></radialGradient></defs><rect width="826" height="318" fill="url(#vg)"/><g id="gr"></g><g id="ctx"></g><path class="wal" id="wl"/><text class="walt" id="wt">Garis Wallace</text><g id="sea"></g><g id="map"></g><g id="lb"></g><g id="ic"></g></svg>
+</div>
+<div class="info" id="info"><h2>Seluruh Indonesia</h2><p>Menampilkan semua spesies. Pilih pulau di peta untuk melihat penghuni khasnya.</p></div>
+<div class="bar">
+<button class="chip" data-t="all" aria-pressed="true">Semua</button>
+<button class="chip" data-t="fauna" aria-pressed="false">Fauna</button>
+<button class="chip" data-t="flora" aria-pressed="false">Flora</button>
+<button class="chip" id="reset" aria-pressed="false">Reset pulau</button>
+<input type="search" id="q" placeholder="Cari nama atau nama ilmiah" aria-label="Cari spesies">
+</div>
+<div class="grid" id="grid"></div>
+<div class="box" id="zona"><h2>Kenapa tiap pulau punya penghuni berbeda?</h2><p>Indonesia berada di pertemuan dua dunia hayati: Asia dan Australia. Selama zaman es, permukaan laut turun sehingga sebagian pulau menyatu dengan daratan besar, sedangkan pulau lain tetap dikelilingi laut dalam. Akibatnya, tiap wilayah punya kelompok satwa dan tumbuhan yang berbeda.</p>
+<div class="zones"><div class="zone"><h3>Paparan Sunda (Asia)</h3><p>Sumatera, Jawa, Kalimantan, dan Bali dulu tersambung dengan daratan Asia. Karena itu ada harimau, gajah, badak, orangutan, dan hutan hujan yang dipenuhi pohon dipterokarpa.</p></div>
+<div class="zone"><h3>Wallacea (peralihan)</h3><p>Sulawesi, Nusa Tenggara (timur Bali), dan Maluku dikelilingi laut dalam dan tidak pernah menyatu dengan daratan besar. Banyak spesiesnya endemik, misalnya anoa, maleo, tarsius, dan komodo.</p></div>
+<div class="zone"><h3>Paparan Sahul (Australasia)</h3><p>Papua tersambung dengan daratan Australia. Di sini hidup hewan berkantung, mamalia bertelur, cenderawasih, dan kasuari.</p></div></div>
+<p><b>Garis Wallace</b> adalah batas imajiner yang digambarkan naturalis Alfred Russel Wallace pada abad ke-19. Garis ini melewati Selat Makassar dan Selat Lombok, memisahkan fauna bercorak Asia di barat dari fauna peralihan di timur. Peralihan di lapangan berlangsung bertahap, dan garis Weber di sebelah timurnya menandai tempat fauna Australia mulai lebih dominan daripada fauna Asia.</p></div>
+<div class="box"><h2>Cara membaca data</h2>
+<ul class="lg"><li><span class="st">CR</span><span><b>Kritis.</b> Risiko sangat tinggi punah di alam liar.</span></li><li><span class="st">EN</span><span><b>Terancam.</b> Risiko tinggi punah di alam liar.</span></li><li><span class="st">VU</span><span><b>Rentan.</b> Berisiko menghadapi kepunahan jika ancaman berlanjut.</span></li><li><span class="st">LC</span><span><b>Risiko rendah.</b> Belum tergolong terancam saat ini.</span></li><li><span class="st">Beragam</span><span>Kelompok dengan banyak jenis, dan status tiap jenis berbeda-beda.</span></li><li><span class="st">Dilindungi</span><span>Dilindungi oleh peraturan di Indonesia.</span></li></ul>
+<p>Persebaran menunjukkan wilayah utama tempat spesies ditemukan, dan bisa lebih luas di kenyataannya. Ikon di peta ditaruh di pulau pertama dalam daftar persebaran. Klik ikon atau kartu untuk membaca habitat, zona, arti status, dan fakta singkatnya. Semua data ini ringkasan untuk edukasi, jadi cek IUCN Red List untuk status terbaru.</p></div>
+<div class="box" id="sim"><h2>Simulator populasi</h2><p>Pilih satu spesies, atur tekanan terhadapnya, lalu lihat bagaimana populasinya berubah. Indeks populasi dimulai dari 100. Garis putus-putus menunjukkan acuan kalau tidak ada ancaman sama sekali.</p>
+<div class="simgrid"><div class="ctrl"><label>Spesies<select id="ss"></select></label>
+<label>Lama simulasi: <b id="vy">30</b> tahun<input type="range" id="sy" min="5" max="60" value="30"></label>
+<label>Kehilangan habitat per tahun: <b id="vh">2</b>%<input type="range" id="sh" min="0" max="10" step="0.5" value="2"></label>
+<label>Perburuan dan perdagangan: <b id="vp">1</b>% per tahun<input type="range" id="sp" min="0" max="10" step="0.5" value="1"></label>
+<label>Upaya konservasi: <b id="vc">0</b> dari 10<input type="range" id="sc" min="0" max="10" value="0"></label>
+<div class="presets"><button class="chip" data-p="4,3,0">Tanpa perlindungan</button><button class="chip" data-p="1,1,8">Konservasi aktif</button><button class="chip" data-p="8,7,0">Skenario terburuk</button><button class="chip" data-p="0,0,10">Kondisi ideal</button></div></div>
+<div><svg id="ch" viewBox="0 0 640 260" role="img" aria-label="Grafik indeks populasi"></svg><div class="key"><span><i></i>Skenario kamu</span><span><i class="d"></i>Tanpa ancaman</span></div><div id="res"></div></div></div></div>
+</main>
+<footer>Tentang data: status konservasi mengacu pada kategori IUCN Red List dan bisa berubah. Koleksi ini hanya sebagian kecil dari keanekaragaman hayati Indonesia. Garis pantai di peta digambar dari perkiraan koordinat, jadi bentuknya mendekati aslinya tetapi tidak presisi. Simulator memakai model pertumbuhan logistik sederhana untuk belajar, dan hasilnya bukan prediksi populasi nyata.</footer>
+<dialog id="dlg"><button class="x" aria-label="Tutup" id="cl">×</button><div id="dc"></div></dialog>
+<script>
+const R={
+sumatera:["Sumatera","Pulau di zona Asia (Paparan Sunda). Hutan hujan dataran rendah menjadi rumah bagi satwa besar seperti harimau, gajah, dan orangutan."],
+jawa:["Jawa","Pulau terpadat di dunia, tetapi hutan yang tersisa di taman nasional masih menyimpan satwa langka dan flora pegunungan."],
+kalimantan:["Kalimantan","Bagian dari Paparan Sunda dengan hutan hujan tropis dan rawa gambut, pusat keanekaragaman hayati Asia Tenggara."],
+sulawesi:["Sulawesi","Berada di zona peralihan Wallacea. Banyak satwa endemik karena pulau ini tidak pernah menyatu dengan daratan Asia atau Australia."],
+nusra:["Nusa Tenggara","Iklim lebih kering dengan savana. Termasuk zona Wallacea, dengan satwa purba yang bertahan di beberapa pulau."],
+maluku:["Maluku","Kepulauan rempah di zona Wallacea. Hutannya kaya burung paruh bengkok dan tanaman rempah."],
+papua:["Papua","Bagian dari Paparan Sahul (Australasia). Satwanya berkerabat dengan Australia, misalnya burung cenderawasih dan hewan berkantung."]};
+const S=[
+{n:"Harimau Sumatera",s:"Panthera tigris sumatrae",t:"fauna",r:["sumatera"],e:"🐅",st:"CR",d:"Anak jenis harimau terkecil di dunia dan satu-satunya harimau yang masih hidup di Indonesia. Bulunya lebih gelap dengan loreng rapat.",h:"Hutan hujan dataran rendah hingga pegunungan",f:"Diperkirakan tersisa kurang dari 500 ekor di alam liar."},
+{n:"Orangutan Sumatera",s:"Pongo abelii",t:"fauna",r:["sumatera"],e:"🦧",st:"CR",d:"Kera besar berambut oranye kemerahan yang hidup di pohon dan jarang turun ke tanah. Dikenal cerdas dan pandai memakai alat.",h:"Hutan hujan Aceh dan Sumatera Utara",f:"Orangutan membuat sarang baru dari dahan setiap malam."},
+{n:"Gajah Sumatera",s:"Elephas maximus sumatranus",t:"fauna",r:["sumatera"],e:"🐘",st:"CR",d:"Gajah Asia berukuran lebih kecil dengan telinga relatif lebar. Hidup berkelompok dipimpin betina tertua.",h:"Hutan dataran rendah dan tepi sungai",f:"Seekor gajah bisa makan sampai 150 kg tumbuhan per hari."},
+{n:"Rafflesia",s:"Rafflesia arnoldii",t:"flora",r:["sumatera"],e:"🌺",st:"Langka",d:"Bunga parasit terbesar di dunia, diameternya bisa lebih dari 1 meter. Tidak punya daun, batang, maupun akar sendiri.",h:"Hutan hujan Bengkulu dan sekitarnya, menumpang pada liana Tetrastigma",f:"Mekar hanya sekitar 5 hari dan berbau seperti daging busuk untuk memikat serangga."},
+{n:"Bunga Bangkai",s:"Amorphophallus titanum",t:"flora",r:["sumatera"],e:"🌿",st:"EN",d:"Memiliki bunga majemuk tertinggi di dunia, mencapai sekitar 3 meter. Mekar sangat jarang.",h:"Hutan hujan Sumatera",f:"Bau busuknya muncul untuk menarik kumbang penyerbuk."},
+{n:"Badak Jawa",s:"Rhinoceros sondaicus",t:"fauna",r:["jawa"],e:"🦏",st:"CR",d:"Badak bercula satu yang sangat pemalu. Kulitnya berlipat seperti perisai.",h:"Hutan dataran rendah Ujung Kulon, Banten",f:"Populasi liar terakhirnya hanya ada di Taman Nasional Ujung Kulon."},
+{n:"Owa Jawa",s:"Hylobates moloch",t:"fauna",r:["jawa"],e:"🐒",st:"EN",d:"Primata tanpa ekor berbulu abu-abu keperakan yang bergelantungan dengan lengan panjang. Hidup berpasangan setia.",h:"Hutan hujan pegunungan Jawa Barat dan Jawa Tengah",f:"Nyanyian duet pasangan owa bisa terdengar hingga beberapa kilometer."},
+{n:"Elang Jawa",s:"Nisaetus bartelsi",t:"fauna",r:["jawa"],e:"🦅",st:"EN",d:"Burung pemangsa berjambul yang dijadikan simbol satwa langka nasional dan inspirasi burung Garuda.",h:"Hutan pegunungan, terutama di lereng gunung",f:"Hanya berkembang biak satu telur dalam satu musim."},
+{n:"Edelweis Jawa",s:"Anaphalis javanica",t:"flora",r:["jawa"],e:"🌼",st:"LC",d:"Bunga abadi berwarna putih yang tumbuh di tanah vulkanik tinggi. Bunganya tidak cepat layu.",h:"Padang rumput di ketinggian lebih dari 2.000 m, misalnya Gunung Gede dan Semeru",f:"Dilindungi, dan memetiknya di kawasan konservasi dilarang."},
+{n:"Orangutan Kalimantan",s:"Pongo pygmaeus",t:"fauna",r:["kalimantan"],e:"🦧",st:"CR",d:"Kerabat orangutan Sumatera dengan rambut lebih gelap. Jantan dewasa memiliki bantalan pipi lebar.",h:"Hutan hujan dan rawa gambut",f:"Dalam bahasa Melayu, orangutan berarti 'orang hutan'."},
+{n:"Bekantan",s:"Nasalis larvatus",t:"fauna",r:["kalimantan"],e:"🐵",st:"EN",d:"Monyet berhidung panjang yang khas, terutama pada jantan. Pandai berenang dan hidup di tepi sungai.",h:"Hutan bakau dan tepi sungai pesisir Kalimantan",f:"Menjadi maskot Provinsi Kalimantan Selatan."},
+{n:"Kantong Semar",s:"Nepenthes spp.",t:"flora",r:["kalimantan","sumatera"],e:"🪴",st:"Beragam",d:"Tumbuhan karnivora dengan kantong berisi cairan pencerna untuk menjebak serangga.",h:"Tanah miskin hara di hutan kerangas dan pegunungan",f:"Borneo memiliki puluhan jenis Nepenthes, sebagian endemik."},
+{n:"Anoa",s:"Bubalus depressicornis",t:"fauna",r:["sulawesi"],e:"🐃",st:"EN",d:"Kerbau kerdil endemik Sulawesi, tinggi sekitar 1 meter, bertanduk lurus ke belakang.",h:"Hutan dataran rendah dan pegunungan",f:"Merupakan salah satu sapi liar terkecil di dunia."},
+{n:"Maleo",s:"Macrocephalon maleo",t:"fauna",r:["sulawesi"],e:"🐦",st:"EN",d:"Burung endemik Sulawesi dengan tonjolan hitam di kepala. Telurnya dikubur di tanah panas bumi atau pasir pantai.",h:"Pantai berpasir dan hutan sekitar sumber panas bumi",f:"Anak maleo menetas dan langsung bisa terbang tanpa dierami induknya."},
+{n:"Tarsius",s:"Tarsius tarsier",t:"fauna",r:["sulawesi"],e:"👀",st:"VU",d:"Primata mungil seukuran telapak tangan dengan mata sangat besar. Aktif malam hari dan memangsa serangga.",h:"Hutan sekunder dan semak di Sulawesi",f:"Matanya lebih besar daripada otaknya dan tidak bisa digerakkan, jadi lehernya memutar hampir 180°."},
+{n:"Komodo",s:"Varanus komodoensis",t:"fauna",r:["nusra"],e:"🦎",st:"EN",d:"Kadal terbesar di dunia, panjangnya bisa lebih dari 2,5 meter. Pemburu ulung yang menggunakan air liur berbisa.",h:"Savana kering Pulau Komodo, Rinca, Padar, dan Flores",f:"Taman Nasional Komodo ditetapkan sebagai Situs Warisan Dunia UNESCO."},
+{n:"Cendana",s:"Santalum album",t:"flora",r:["nusra"],e:"🌳",st:"VU",d:"Pohon beraroma harum yang kayunya dipakai untuk wewangian dan ukiran. Bersifat semi parasit pada akar tanaman lain.",h:"Lahan kering Nusa Tenggara Timur",f:"Dulu menjadi komoditas dagang utama Pulau Timor."},
+{n:"Kakatua Maluku",s:"Cacatua moluccensis",t:"fauna",r:["maluku"],e:"🦜",st:"VU",d:"Kakatua besar berbulu merah muda salmon dengan jambul merah-oranye.",h:"Hutan dataran rendah Seram dan sekitarnya",f:"Perdagangan satwa liar adalah ancaman terbesarnya."},
+{n:"Pala",s:"Myristica fragrans",t:"flora",r:["maluku"],e:"🌰",st:"LC",d:"Pohon penghasil rempah. Biji dan selaput bijinya (fuli) menjadi dua rempah berbeda.",h:"Hutan tropis lembap, berasal dari Kepulauan Banda",f:"Pala pernah membuat Kepulauan Banda diperebutkan bangsa Eropa."},
+{n:"Cenderawasih",s:"Paradisaeidae",t:"fauna",r:["papua"],e:"🦚",st:"Beragam",d:"Kelompok burung dengan bulu ekor dan hiasan kepala menawan. Jantan menari untuk menarik betina.",h:"Hutan hujan Papua dan pulau sekitarnya",f:"Papua menjadi pusat keragaman burung ini, dan bulunya berperan dalam budaya adat."},
+{n:"Kanguru Pohon",s:"Dendrolagus spp.",t:"fauna",r:["papua"],e:"🦘",st:"Beragam",d:"Kanguru yang memanjat pohon dengan kaki depan kuat dan ekor panjang untuk menyeimbangkan diri.",h:"Hutan pegunungan Papua",f:"Bukti kedekatan fauna Papua dengan Australia."},
+{n:"Anggrek Hitam",s:"Coelogyne pandurata",t:"flora",r:["kalimantan"],e:"🌸",st:"Dilindungi",d:"Anggrek epifit berwarna hijau dengan bibir bunga hitam bercorak. Ikon flora Kalimantan Timur.",h:"Pohon di hutan hujan dataran rendah",f:"Sering disebut sebagai anggrek terindah di Indonesia."},
+{n:"Matoa",s:"Pometia pinnata",t:"flora",r:["papua"],e:"🍈",st:"LC",d:"Pohon buah khas Papua dengan rasa perpaduan lengkeng dan rambutan.",h:"Hutan dataran rendah Papua",f:"Pohonnya bisa tumbuh sangat tinggi dan kayunya kuat."},
+{n:"Beruang Madu",s:"Helarctos malayanus",t:"fauna",r:["sumatera","kalimantan"],e:"🐻",st:"VU",d:"Beruang terkecil di dunia dengan bercak dada berbentuk U berwarna krem. Pemanjat pohon ulung dengan lidah sangat panjang.",h:"Hutan hujan dataran rendah",f:"Lidahnya bisa menjulur sekitar 25 cm untuk mengambil madu dan rayap."},
+{n:"Badak Sumatera",s:"Dicerorhinus sumatrensis",t:"fauna",r:["sumatera","kalimantan"],e:"🦏",st:"CR",d:"Badak terkecil dan satu-satunya yang berambut. Bercula dua dan kerabat terdekat badak berbulu purba.",h:"Hutan perbukitan dan pegunungan",f:"Jumlahnya diperkirakan tinggal puluhan ekor."},
+{n:"Siamang",s:"Symphalangus syndactylus",t:"fauna",r:["sumatera"],e:"🐒",st:"EN",d:"Owa terbesar, berbulu hitam pekat dengan kantong suara di leher yang mengembang saat bersuara.",h:"Hutan hujan dataran rendah hingga pegunungan",f:"Pasangan siamang bernyanyi bersahutan pada pagi hari."},
+{n:"Banteng Jawa",s:"Bos javanicus",t:"fauna",r:["jawa"],e:"🐂",st:"EN",d:"Sapi liar yang jantannya berwarna hitam kebiruan dengan kaki bagian bawah putih seperti memakai kaus kaki.",h:"Padang savana dan hutan terbuka, misalnya Baluran dan Alas Purwo",f:"Banteng merupakan leluhur sapi Bali yang dijinakkan."},
+{n:"Merak Hijau",s:"Pavo muticus",t:"fauna",r:["jawa"],e:"🦚",st:"EN",d:"Merak jantan memiliki bulu ekor panjang berhiasan mata berwarna hijau keemasan yang dikembangkan saat memikat betina.",h:"Hutan terbuka dan padang rumput dekat air",f:"Satu-satunya merak yang hidup alami di Indonesia."},
+{n:"Jati",s:"Tectona grandis",t:"flora",r:["jawa"],e:"🌳",st:"EN",d:"Pohon kayu keras yang tahan rayap dan air, sejak lama dipakai untuk rumah dan kapal. Menggugurkan daun saat kemarau.",h:"Hutan musim di dataran rendah, banyak ditanam di Jawa",f:"Hutan jati di Jawa sebagian besar merupakan hutan tanaman."},
+{n:"Anggrek Bulan",s:"Phalaenopsis amabilis",t:"flora",r:["jawa","sumatera","kalimantan"],e:"🌸",st:"LC",d:"Anggrek epifit berbunga putih lebar dengan bibir bunga kekuningan. Ditetapkan sebagai puspa pesona nasional.",h:"Menempel di pohon hutan dataran rendah yang lembap",f:"Disebut anggrek bulan karena bunganya putih bundar seperti bulan purnama."},
+{n:"Pesut Mahakam",s:"Orcaella brevirostris",t:"fauna",r:["kalimantan"],e:"🐬",st:"CR",d:"Lumba-lumba air tawar berkepala bulat tanpa paruh. Populasi sungai Mahakam hanya tersisa sedikit.",h:"Sungai Mahakam, Kalimantan Timur",f:"Menyemburkan air dari mulutnya saat muncul ke permukaan."},
+{n:"Enggang Gading",s:"Rhinoplax vigil",t:"fauna",r:["kalimantan","sumatera"],e:"🐦",st:"CR",d:"Burung rangkong dengan balung kepala padat berwarna merah gading. Suara panggilannya menyerupai tawa yang makin cepat.",h:"Hutan hujan dataran rendah",f:"Burung ini dihormati suku Dayak dan menjadi simbol dunia atas."},
+{n:"Ulin",s:"Eusideroxylon zwageri",t:"flora",r:["kalimantan"],e:"🌳",st:"VU",d:"Pohon kayu besi yang sangat keras dan awet di air maupun tanah. Pertumbuhannya lambat.",h:"Hutan hujan dataran rendah Kalimantan dan Sumatera",f:"Dipakai untuk tiang rumah, jembatan, dan sirap atap tradisional."},
+{n:"Babirusa",s:"Babyrousa babyrussa",t:"fauna",r:["sulawesi","maluku"],e:"🐗",st:"VU",d:"Babi hutan dengan taring atas melengkung menembus moncongnya dan tumbuh ke arah dahi.",h:"Hutan hujan dan tepi sungai",f:"Namanya berarti 'babi rusa' dalam bahasa Melayu."},
+{n:"Kuskus Beruang",s:"Ailurops ursinus",t:"fauna",r:["sulawesi"],e:"🐨",st:"VU",d:"Hewan berkantung yang bergerak lambat di pepohonan. Bulunya tebal kelabu kecokelatan dengan ekor yang bisa menggenggam.",h:"Hutan hujan dataran rendah hingga pegunungan",f:"Menunjukkan bahwa marsupial pernah sampai ke Wallacea."},
+{n:"Eboni Sulawesi",s:"Diospyros celebica",t:"flora",r:["sulawesi"],e:"🌳",st:"VU",d:"Pohon penghasil kayu hitam bergaris yang sangat berharga untuk perabot dan alat musik.",h:"Hutan dataran rendah Sulawesi Tengah",f:"Penebangan berlebihan membuat populasi alaminya menyusut."},
+{n:"Kakatua Jambul Kuning Kecil",s:"Cacatua sulphurea",t:"fauna",r:["nusra","sulawesi"],e:"🦜",st:"CR",d:"Kakatua putih berjambul kuning yang dapat ditegakkan. Pandai menirukan suara.",h:"Hutan terbuka, kebun kelapa, dan bakau",f:"Perdagangan burung peliharaan membuat populasinya anjlok."},
+{n:"Rusa Timor",s:"Cervus timorensis",t:"fauna",r:["nusra"],e:"🦌",st:"VU",d:"Rusa berukuran sedang dengan tanduk bercabang tiga. Aktif pada pagi dan senja.",h:"Savana dan hutan terbuka",f:"Menjadi mangsa utama komodo di beberapa pulau."},
+{n:"Lontar",s:"Borassus flabellifer",t:"flora",r:["nusra"],e:"🌴",st:"LC",d:"Palem tinggi yang tahan kering. Niranya diolah menjadi gula dan daunnya dipakai untuk menulis naskah kuno.",h:"Lahan kering dan savana",f:"Daun lontar menjadi 'kertas' bagi naskah tradisional Nusantara."},
+{n:"Burung Bidadari Halmahera",s:"Semioptera wallacii",t:"fauna",r:["maluku"],e:"🐦",st:"LC",d:"Burung cenderawasih berumbai dua helai bulu putih panjang di sayap yang digetarkan saat menari.",h:"Hutan Halmahera dan Bacan",f:"Ditemukan oleh naturalis Alfred Russel Wallace pada 1858."},
+{n:"Cengkih",s:"Syzygium aromaticum",t:"flora",r:["maluku"],e:"🌿",st:"LC",d:"Pohon penghasil rempah dari kuncup bunga yang dikeringkan. Berasal dari Maluku Utara.",h:"Dataran rendah tropis lembap",f:"Pernah dihargai setara emas pada perdagangan rempah dunia."},
+{n:"Kasuari Gelambir Ganda",s:"Casuarius casuarius",t:"fauna",r:["papua"],e:"🦤",st:"LC",d:"Burung besar tak bisa terbang dengan balung di kepala dan leher biru cerah. Lari cepat dan berkaki kuat.",h:"Hutan hujan dataran rendah",f:"Disebut sebagai salah satu burung paling berbahaya di dunia."},
+{n:"Landak Semut Moncong Panjang",s:"Zaglossus bruijni",t:"fauna",r:["papua"],e:"🦔",st:"CR",d:"Mamalia bertelur (monotremata) berduri dengan moncong panjang melengkung. Memakan cacing tanah.",h:"Hutan pegunungan Papua",f:"Bersama platipus, ia termasuk mamalia yang bertelur."},
+{n:"Sarang Semut",s:"Myrmecodia pendans",t:"flora",r:["papua"],e:"🌱",st:"LC",d:"Tumbuhan epifit dengan umbi berongga yang menjadi rumah semut. Dipakai dalam pengobatan tradisional.",h:"Menempel pada pohon di hutan Papua",f:"Semutnya menyumbang hara melalui kotorannya bagi tumbuhan."},
+{n:"Tapir Asia",s:"Tapirus indicus",t:"fauna",r:["sumatera"],e:"🐾",st:"EN",d:"Mamalia berbelalai pendek dengan tubuh hitam dan putih seperti memakai pelana. Pemalu dan aktif malam hari.",h:"Hutan hujan dataran rendah dan rawa",f:"Warna kontrasnya berfungsi sebagai kamuflase di bawah cahaya bulan."},
+{n:"Kemenyan",s:"Styrax benzoin",t:"flora",r:["sumatera"],e:"🌳",st:"Dimanfaatkan",d:"Pohon penghasil getah harum untuk dupa dan wewangian. Disadap oleh petani di dataran tinggi Sumatera Utara.",h:"Hutan dataran tinggi dan kebun masyarakat",f:"Getahnya sudah diperdagangkan sejak berabad-abad lalu."},
+{n:"Macan Dahan",s:"Neofelis diardi",t:"fauna",r:["kalimantan","sumatera"],e:"🐆",st:"VU",d:"Kucing besar dengan corak bulu seperti awan. Pemanjat pohon handal dengan taring relatif panjang.",h:"Hutan hujan Kalimantan dan Sumatera",f:"Mampu menuruni batang pohon dengan kepala di bawah."},
+{n:"Meranti",s:"Shorea spp.",t:"flora",r:["kalimantan","sumatera"],e:"🌳",st:"Beragam",d:"Kelompok pohon raksasa penyusun tajuk atas hutan dipterokarpa. Buahnya bersayap dan kayunya bernilai dagang.",h:"Hutan hujan dataran rendah",f:"Berbuah serentak dalam peristiwa langka yang disebut masting."},
+{n:"Yaki",s:"Macaca nigra",t:"fauna",r:["sulawesi"],e:"🐒",st:"CR",d:"Monyet berbulu hitam dengan jambul tinggi di kepala. Hidup dalam kelompok besar.",h:"Hutan Tangkoko dan Minahasa, Sulawesi Utara",f:"Dikenal dunia lewat foto swafoto yang diambilnya sendiri."},
+{n:"Julang Sulawesi",s:"Rhyticeros cassidix",t:"fauna",r:["sulawesi"],e:"🐦",st:"LC",d:"Burung rangkong berkepala dan leher kuning keemasan dengan paruh merah bertanduk.",h:"Hutan dataran rendah hingga pegunungan",f:"Kepakan sayapnya terdengar dari jauh seperti desir angin kencang."},
+{n:"Jalak Bali",s:"Leucopsar rothschildi",t:"fauna",r:["nusra"],z:"Paparan Sunda (Asia)",e:"🐦",st:"CR",d:"Burung putih bersih dengan mata biru dan ujung sayap hitam. Hanya ada di Bali bagian barat.",h:"Hutan Taman Nasional Bali Barat",f:"Menjadi fauna identitas Provinsi Bali."},
+{n:"Julang Sumba",s:"Rhyticeros everetti",t:"fauna",r:["nusra"],e:"🐦",st:"VU",d:"Rangkong endemik Sumba, jantannya memiliki kantong leher berwarna biru.",h:"Hutan dataran rendah Sumba",f:"Tidak ditemukan di pulau lain selain Sumba."},
+{n:"Ampupu",s:"Eucalyptus urophylla",t:"flora",r:["nusra"],e:"🌳",st:"LC",d:"Jenis ekaliptus yang tumbuh alami di Nusa Tenggara, berkulit kelabu yang mengelupas.",h:"Pegunungan Timor, Flores, dan Alor",f:"Kayunya dipakai untuk bahan bangunan dan pulp."},
+{n:"Kasturi Ternate",s:"Lorius garrulus",t:"fauna",r:["maluku"],e:"🦜",st:"EN",d:"Burung paruh bengkok berbulu merah mencolok dengan sayap hijau. Endemik Maluku Utara.",h:"Hutan dataran rendah Halmahera",f:"Pemakan nektar dan buah, serta penyerbuk bagi banyak bunga hutan."},
+{n:"Kenari",s:"Canarium indicum",t:"flora",r:["maluku"],e:"🌰",st:"LC",d:"Pohon penghasil biji kenari yang diolah menjadi camilan dan minyak.",h:"Hutan dan kebun Maluku dan Papua",f:"Bijinya menjadi bahan kue khas Maluku."},
+{n:"Mambruk Victoria",s:"Goura victoria",t:"fauna",r:["papua"],e:"🐦",st:"VU",d:"Merpati terbesar di dunia dengan jambul berumbai seperti kipas renda.",h:"Hutan dataran rendah Papua utara",f:"Ukurannya hampir sebesar ayam kalkun."},
+{n:"Merbau",s:"Intsia bijuga",t:"flora",r:["papua"],e:"🌳",st:"VU",d:"Pohon kayu keras bernilai tinggi berwarna cokelat kemerahan.",h:"Hutan dataran rendah Papua",f:"Dipakai untuk lantai, tangga, dan jembatan."},
+{n:"Ikan Pelangi Boeseman",s:"Melanotaenia boesemani",t:"fauna",r:["papua"],e:"🐟",st:"EN",d:"Ikan hias kecil dengan tubuh biru keunguan di bagian depan dan oranye di belakang.",h:"Danau Ayamaru, Papua Barat",f:"Warnanya makin cerah seiring bertambahnya umur."},
+{n:"Buah Merah",s:"Pandanus conoideus",t:"flora",r:["papua"],e:"🍓",st:"LC",d:"Pandan dengan buah merah panjang yang diolah menjadi minyak dan makanan tradisional.",h:"Hutan dan kebun masyarakat Papua",f:"Sering dimasak dengan batu panas dalam tradisi bakar batu."},
+{n:"Kambing Hutan Sumatera",s:"Capricornis sumatraensis",t:"fauna",r:["sumatera"],e:"🐐",st:"VU",d:"Kerabat kambing bertanduk pendek melengkung dengan surai di leher. Penyendiri dan lincah di lereng terjal.",h:"Hutan pegunungan berbatu dan berlereng curam",f:"Orang Sumatera menyebutnya kambing gunung atau 'kambing hutan'."},
+{n:"Pinus Merkusii",s:"Pinus merkusii",t:"flora",r:["sumatera"],e:"🌲",st:"VU",d:"Satu-satunya pinus asli yang tumbuh alami melewati garis khatulistiwa. Getahnya dipakai untuk gondorukem dan terpentin.",h:"Dataran tinggi Aceh, Tapanuli, dan Kerinci",f:"Penyebaran alaminya hanya di Sumatera bagian utara dan tengah."},
+{n:"Rotan",s:"Calamus spp.",t:"flora",r:["sumatera","kalimantan"],e:"🌿",st:"Beragam",d:"Palem memanjat berduri yang batangnya lentur dan kuat. Bahan utama anyaman dan perabot.",h:"Hutan hujan dataran rendah",f:"Indonesia menjadi penghasil rotan terbesar dunia."},
+{n:"Lutung Jawa",s:"Trachypithecus auratus",t:"fauna",r:["jawa"],e:"🐒",st:"VU",d:"Monyet berekor panjang berbulu hitam atau jingga keemasan. Makan daun dan hidup berkelompok.",h:"Hutan dataran rendah, bakau, dan pegunungan",f:"Warna bulunya bisa hitam atau jingga tergantung populasinya."},
+{n:"Kukang Jawa",s:"Nycticebus javanicus",t:"fauna",r:["jawa"],e:"🐒",st:"CR",d:"Primata kecil bermata bulat besar yang bergerak lambat di malam hari. Gigitannya mengandung racun.",h:"Hutan dan kebun campuran di Jawa",f:"Satwa ini dilindungi dan tidak boleh dipelihara."},
+{n:"Rasamala",s:"Altingia excelsa",t:"flora",r:["jawa"],e:"🌳",st:"Dimanfaatkan",d:"Pohon tinggi menjulang berkayu keras dengan getah harum. Penyusun hutan pegunungan Jawa Barat.",h:"Hutan pegunungan Gunung Gede Pangrango",f:"Kayunya dikenal kuat untuk konstruksi dan tiang."},
+{n:"Senyulong",s:"Tomistoma schlegelii",t:"fauna",r:["kalimantan","sumatera"],e:"🐊",st:"EN",d:"Buaya bermoncong sempit panjang yang mirip gavial. Memakan ikan dan hewan kecil.",h:"Rawa gambut dan sungai berair tenang",f:"Berbeda dari buaya muara, ia termasuk pemakan ikan."},
+{n:"Arwana Super Red",s:"Scleropages legendrii",t:"fauna",r:["kalimantan"],e:"🐟",st:"EN",d:"Ikan air tawar bersisik besar kemerahan dan badan panjang. Pelompat ulung yang memangsa serangga di atas air.",h:"Sungai dan danau Kapuas, Kalimantan Barat",f:"Dikenal sebagai ikan hias bernilai tinggi dan simbol keberuntungan."},
+{n:"Gaharu",s:"Aquilaria malaccensis",t:"flora",r:["kalimantan","sumatera"],e:"🌳",st:"CR",d:"Pohon yang menghasilkan resin harum saat terinfeksi jamur. Resinnya dipakai untuk dupa dan parfum.",h:"Hutan hujan dataran rendah",f:"Perdagangannya diatur ketat oleh CITES."},
+{n:"Coelacanth Sulawesi",s:"Latimeria menadoensis",t:"fauna",r:["sulawesi"],e:"🐟",st:"VU",d:"Ikan purba yang dianggap punah sejak masa dinosaurus hingga ditemukan hidup. Siripnya berdaging mirip kaki.",h:"Gua bawah laut di perairan Manado, Sulawesi Utara",f:"Disebut fosil hidup karena hampir tidak berubah selama jutaan tahun."},
+{n:"Anoa Pegunungan",s:"Bubalus quarlesi",t:"fauna",r:["sulawesi"],e:"🐃",st:"EN",d:"Anoa yang lebih kecil dengan tanduk lebih pendek dan runcing. Hidup di dataran tinggi.",h:"Hutan pegunungan Sulawesi",f:"Termasuk kerbau liar terkecil di dunia."},
+{n:"Gebang",s:"Corypha utan",t:"flora",r:["nusra"],e:"🌴",st:"LC",d:"Palem raksasa berdaun lebar yang mati setelah berbunga sekali seumur hidup. Daunnya dianyam dan niranya dijadikan gula.",h:"Savana dan lahan kering Nusa Tenggara",f:"Menjadi tanaman pangan cadangan saat paceklik di NTT."},
+{n:"Kura-kura Leher Ular Rote",s:"Chelodina mccordi",t:"fauna",r:["nusra"],e:"🐢",st:"CR",d:"Kura-kura air tawar berleher sangat panjang. Endemik Pulau Rote.",h:"Rawa dan danau musiman di Pulau Rote",f:"Perburuan untuk perdagangan hewan peliharaan membuatnya hampir punah."},
+{n:"Celepuk Rinjani",s:"Otus jolandae",t:"fauna",r:["nusra"],e:"🦉",st:"LC",d:"Burung hantu kecil berbulu cokelat berbintik. Ditemukan di Lombok dan dikenali dari suaranya.",h:"Hutan lereng Gunung Rinjani",f:"Sebagai jenis tersendiri, ia baru dibedakan dari suaranya."},
+{n:"Kakatua Putih",s:"Cacatua alba",t:"fauna",r:["maluku"],e:"🦜",st:"EN",d:"Kakatua berbulu putih dengan jambul yang mengembang saat gembira. Endemik Maluku Utara.",h:"Hutan dataran rendah Halmahera dan sekitarnya",f:"Burung pintar yang bisa menirukan suara manusia."},
+{n:"Kayu Putih",s:"Melaleuca cajuputi",t:"flora",r:["maluku"],e:"🌿",st:"LC",d:"Pohon berkulit tipis berlapis yang daunnya disuling menjadi minyak kayu putih.",h:"Savana dan rawa Pulau Buru",f:"Minyak kayu putih terbaik dihasilkan dari Pulau Buru."},
+{n:"Sagu",s:"Metroxylon sagu",t:"flora",r:["papua","maluku"],e:"🌴",st:"LC",d:"Palem rawa yang batangnya menyimpan pati dalam jumlah besar. Pangan pokok masyarakat Papua dan Maluku.",h:"Rawa dan tepi sungai dataran rendah",f:"Satu pohon dapat menghasilkan ratusan kilogram pati."},
+{n:"Arwana Irian",s:"Scleropages jardinii",t:"fauna",r:["papua"],e:"🐟",st:"LC",d:"Ikan arwana berwarna perak keemasan dengan bintik merah pada sisik. Berkerabat dengan arwana Australia.",h:"Sungai dan rawa selatan Papua",f:"Induk jantan mengerami telur di dalam mulutnya."},
+{n:"Anggrek Dendrobium",s:"Dendrobium spp.",t:"flora",r:["papua"],e:"🌸",st:"Beragam",d:"Marga anggrek epifit terbesar di Papua dengan ratusan jenis berbunga beragam warna.",h:"Pohon di hutan hujan hingga pegunungan",f:"Papua dianggap salah satu pusat keragaman anggrek dunia."},
+{n:"Cenderawasih Raja",s:"Cicinnurus regius",t:"fauna",r:["papua"],e:"🦚",st:"LC",d:"Burung kecil berbulu merah menyala dengan ekor berujung lingkaran hijau. Penari handal.",h:"Hutan dataran rendah Papua",f:"Salah satu cenderawasih terkecil yang dikenal."},
+{n:"Kupu-kupu Sayap Burung",s:"Ornithoptera spp.",t:"fauna",r:["papua","maluku"],e:"🦋",st:"Dilindungi",d:"Kupu-kupu berukuran sangat besar dengan sayap hitam berpola hijau atau kuning. Jantan lebih berwarna.",h:"Hutan hujan dataran rendah Papua dan Maluku",f:"Sayapnya bisa membentang lebih dari 20 cm."}];
+let reg=null,typ="all";
+const $=s=>document.querySelector(s),g=$("#grid"),dlg=$("#dlg");
+function render(){
+ const q=$("#q").value.trim().toLowerCase();
+ const l=S.filter(x=>(!reg||x.r.includes(reg))&&(typ=="all"||x.t==typ)&&(!q||(x.n+x.s).toLowerCase().includes(q)));
+ g.innerHTML=l.length?l.map(x=>{const i=S.indexOf(x);return `<button class="card" data-i="${i}"><span class="em" aria-hidden="true">${x.e}</span><h3>${x.n}</h3><span class="sci">${x.s}</span><span class="tag ${x.t}">${x.t=="fauna"?"Fauna":"Flora"}</span></button>`}).join(""):`<div class="empty">Tidak ada spesies yang cocok. Coba ubah pulau, kategori, atau kata kunci.</div>`;
+ const rr=reg?R[reg]:["Seluruh Indonesia","Menampilkan semua spesies. Pilih pulau di peta untuk melihat penghuni khasnya."];
+ const nf=l.filter(x=>x.t=="fauna").length,nc=l.filter(x=>x.st=="CR").length;$("#info").innerHTML=`<h2>${rr[0]}</h2><p>${rr[1]}</p><p><b>${l.length}</b> spesies tampil: ${nf} fauna, ${l.length-nf} flora, ${nc} berstatus kritis (CR).</p>`;
+ document.querySelectorAll(".isl").forEach(p=>p.classList.toggle("on",p.dataset.r==reg));
+ document.querySelectorAll(".ic").forEach(t=>t.classList.toggle("dim",!l.includes(S[t.dataset.i])));
+}
+function pick(r){reg=reg==r?null:r;render();$("#info").scrollIntoView({behavior:"smooth",block:"nearest"})}
+document.querySelectorAll(".isl").forEach(p=>{p.onclick=()=>pick(p.dataset.r);p.onkeydown=e=>{if(e.key=="Enter"||e.key==" "){e.preventDefault();pick(p.dataset.r)}}});
+document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{typ=b.dataset.t;document.querySelectorAll("[data-t]").forEach(c=>c.setAttribute("aria-pressed",c==b));render()});
+$("#reset").onclick=()=>{reg=null;render()};
+$("#q").oninput=render;
+function openSp(i){const x=S[i];
+ $("#dc").innerHTML=`<div class="dh"><span class="em" aria-hidden="true">${x.e}</span><div><h2>${x.n}</h2><div class="sci">${x.s}</div></div></div><div class="db"><dl><dt>Kategori</dt><dd>${x.t=="fauna"?"Fauna":"Flora"}</dd><dt>Persebaran</dt><dd>${x.r.map(k=>R[k][0]).join(", ")}</dd><dt>Zona</dt><dd>${x.z||[...new Set(x.r.map(k=>Z[k]))].join(", ")}</dd><dt>Habitat</dt><dd>${x.h}</dd><dt>Status</dt><dd><span class="st">${x.st}</span></dd><dt>Arti status</dt><dd>${ST[x.st]||"-"}</dd></dl><p>${x.d}</p><div class="fact"><b>Tahukah kamu?</b> ${x.f}</div><p><button class="chip" onclick="goSim(${i})">Simulasikan populasi ini</button></p></div>`;
+ dlg.showModal()}
+g.onclick=e=>{const c=e.target.closest(".card");if(c)openSp(c.dataset.i)};
+$("#cl").onclick=()=>dlg.close();
+dlg.onclick=e=>{if(e.target==dlg)dlg.close()};
+const Z={sumatera:"Paparan Sunda (Asia)",jawa:"Paparan Sunda (Asia)",kalimantan:"Paparan Sunda (Asia)",sulawesi:"Wallacea",nusra:"Wallacea",maluku:"Wallacea",papua:"Paparan Sahul (Australasia)"};
+const px=t=>t.trim().split(/\s+/).map(q=>{const[a,b]=q.split(",");return[(a-94.5)*17.2,(7.2-b)*17.2]});
+const f1=v=>v.toFixed(1);
+const sm=(P,cl=1)=>{const n=P.length,g=i=>P[cl?(i+n)%n:Math.max(0,Math.min(n-1,i))];let d="M"+P[0].map(f1);for(let i=0;i<(cl?n:n-1);i++){const a=g(i-1),b=g(i),c=g(i+1),e=g(i+2);d+=`C${f1(b[0]+(c[0]-a[0])/6)},${f1(b[1]+(c[1]-a[1])/6)} ${f1(c[0]-(e[0]-b[0])/6)},${f1(c[1]-(e[1]-b[1])/6)} ${f1(c[0])},${f1(c[1])}`}return d+(cl?"Z":"")};
+const ISL=[
+["sumatera","95.3,5.6 96.5,5.2 97.6,5.2 98.3,4.1 99.3,3.2 100.4,2.4 101.4,1.7 102.3,1.1 103.2,0.5 103.8,-0.6 104.3,-1.2 104.6,-2.0 105.4,-2.9 106.0,-3.8 105.9,-5.5 105.4,-5.9 104.6,-5.4 103.8,-4.7 102.4,-4.1 101.5,-2.9 100.8,-1.8 100.3,-0.8 99.4,0.1 98.8,1.6 98.0,2.5 97.0,3.3 96.0,4.1"],
+["sumatera","105.1,-1.5 106.1,-1.7 106.8,-2.4 106.2,-3.1 105.3,-2.2"],["sumatera","107.4,-2.5 108.3,-2.7 107.9,-3.3 107.3,-3.1"],["sumatera","97.3,1.2 97.9,1.0 97.6,0.4 97.1,0.6"],
+["jawa","105.2,-6.8 105.9,-5.95 106.8,-6.0 107.7,-6.2 108.6,-6.7 109.7,-6.9 110.6,-6.9 111.5,-6.6 112.5,-6.9 113.2,-7.7 114.3,-7.8 114.4,-8.4 113.5,-8.5 112.3,-8.3 111.1,-8.2 110.0,-8.0 109.0,-7.8 108.0,-7.8 107.0,-7.4 106.4,-6.9 105.7,-6.8"],
+["jawa","112.7,-7.1 113.4,-6.9 114.1,-7.0 113.5,-7.2"],
+["kalimantan","109.65,2.05 110.4,1.7 111.3,2.5 112.4,3.1 113.4,3.9 114.3,4.7 115.3,5.35 116.1,6.1 116.8,7.0 117.7,6.4 118.3,5.9 119.2,5.3 118.2,4.8 117.9,4.2 117.7,3.3 117.9,2.3 117.5,1.0 117.5,0.0 117.1,-0.7 116.8,-1.3 116.5,-2.3 116.0,-3.5 115.0,-4.0 114.5,-3.6 113.8,-3.4 112.5,-3.5 111.5,-3.0 110.5,-2.9 110.0,-2.0 109.9,-1.0 109.1,-0.1 108.9,0.9 109.1,1.7"],
+["sulawesi","125.2,1.6 124.5,1.35 123.6,0.95 122.6,1.0 121.4,1.0 120.5,1.2 119.9,0.8 119.8,0.0 119.7,-0.8 119.7,-1.5 119.3,-2.5 118.9,-3.2 119.4,-4.5 119.45,-5.5 119.7,-5.7 120.4,-5.6 120.35,-4.6 120.3,-3.6 120.7,-2.9 121.2,-2.7 121.4,-3.8 121.8,-4.6 122.3,-5.1 122.8,-5.5 122.95,-4.6 122.7,-4.0 122.2,-3.6 122.0,-3.0 122.5,-2.6 122.1,-2.0 122.6,-1.6 123.4,-1.5 123.2,-0.9 122.4,-0.6 121.8,-0.8 121.3,-1.1 120.7,-1.4 120.1,-0.9 120.3,0.0 120.9,0.4 121.6,0.5 123.0,0.5 124.3,0.8 124.9,1.3"],
+["nusra","114.45,-8.15 115.2,-8.0 115.7,-8.3 115.7,-8.8 115.1,-8.8 114.6,-8.7"],["nusra","115.9,-8.4 116.4,-8.3 116.7,-8.5 116.6,-8.9 116.1,-8.9 115.9,-8.7"],
+["nusra","116.8,-8.5 117.5,-8.3 118.2,-8.4 118.7,-8.6 119.0,-8.7 118.4,-8.9 117.6,-9.0 116.8,-8.9"],["nusra","119.8,-8.5 121.0,-8.35 122.4,-8.5 123.0,-8.3 122.9,-8.7 121.6,-8.9 120.4,-8.8 119.8,-8.7"],
+["nusra","118.9,-9.6 119.9,-9.3 120.8,-9.9 120.1,-10.3 119.2,-10.1"],["nusra","123.5,-10.2 124.0,-9.6 125.0,-9.1 126.2,-8.6 127.3,-8.4 127.0,-8.9 126.0,-9.4 125.0,-10.0 124.2,-10.3"],
+["maluku","127.9,2.4 128.5,2.0 128.4,1.3 128.1,0.9 128.6,0.8 128.9,0.4 128.5,0.0 128.1,-0.3 128.4,-0.8 127.9,-0.8 127.7,-0.2 127.5,0.4 127.8,0.9 127.6,1.7"],
+["maluku","128.0,-3.1 129.0,-2.8 130.0,-3.0 130.8,-3.1 130.2,-3.5 129.0,-3.4 128.3,-3.7"],["maluku","126.5,-3.3 127.1,-3.3 127.5,-3.6 127.0,-3.9 126.6,-3.7"],
+["papua","131.25,-0.85 132.0,-0.55 133.0,-0.5 134.0,-0.8 134.2,-1.3 134.0,-2.2 134.5,-2.9 135.4,-3.35 136.0,-2.7 137.2,-1.9 138.0,-1.7 139.0,-2.0 140.0,-2.4 141.0,-2.6 141.0,-2.6 141.0,-9.1 141.0,-9.1 140.4,-8.5 139.4,-8.1 138.8,-7.3 138.4,-6.3 138.1,-5.5 137.3,-5.0 136.4,-4.8 135.3,-4.2 134.3,-3.9 133.7,-3.6 132.9,-3.0 132.3,-2.7 132.7,-2.3 132.0,-2.2 131.4,-1.8 131.1,-1.2"],
+["papua","135.7,-0.8 136.2,-0.9 136.0,-1.2 135.5,-1.1"],["papua","135.8,-1.8 136.5,-1.6 136.9,-1.8 136.2,-1.9"],["papua","130.5,-0.2 131.3,-0.1 131.0,-0.5 130.4,-0.4"]];
+const AN={sumatera:"96.9,4.6 98.9,2.6 101.0,0.2 102.5,-2.3 104.2,-4.0",kalimantan:"110.3,-0.2 112.6,-1.5 114.8,-1.7 116.3,0.2 114.3,2.0 111.5,1.5",sulawesi:"119.8,-3.3 121.4,-3.8 120.2,-1.4 122.4,-1.1 122.3,0.8 124.3,1.1",nusra:"115.1,-8.45 116.3,-8.6 117.9,-8.7 121.2,-8.65 119.9,-9.8 125.0,-9.4",maluku:"128.1,1.0 128.1,-0.3 129.5,-3.2 126.9,-3.5",papua:"132.4,-1.3 136.5,-4.0 138.5,-3.2 139.8,-5.3 139.3,-7.8"};
+const PT=[[0,0],[15,0],[-15,0],[0,14],[0,-14],[15,14],[-15,14],[15,-14],[-15,-14]];
+const LB=[["Sumatera",97.4,0.0],["Jawa",110.0,-9.4],["Kalimantan",110.2,3.9],["Sulawesi",118.0,-1.9],["Nusa Tenggara",121.0,-10.6],["Maluku",130.6,1.5],["Papua",136.5,0.9]];
+const SEA=[["Samudra Hindia",97,-7],["Laut Cina Selatan",108.5,5.2],["Samudra Pasifik",138,3.8],["Laut Arafura",134.5,-10],["Laut Jawa",111,-5.0],["Laut Banda",128.5,-6],["Khatulistiwa",132.5,0.3]];
+function drawMap(){
+ let g="";for(let x=95;x<=140;x+=5)g+=`<line class="gr" x1="${f1((x-94.5)*17.2)}" x2="${f1((x-94.5)*17.2)}" y1="0" y2="318"/>`;for(let y=5;y>=-10;y-=5)g+=`<line class="${y?"gr":"eq"}" x1="0" x2="826" y1="${f1((7.2-y)*17.2)}" y2="${f1((7.2-y)*17.2)}"/>`;$("#gr").innerHTML=g;
+ const pl=a=>"M"+px(a).map(v=>f1(v[0])+","+f1(v[1])).join("L")+"Z";
+ $("#ctx").innerHTML=[`<path class="ctx" d="${sm(px("100.0,7.2 101.0,6.0 102.2,6.2 103.4,4.5 103.5,2.5 104.2,1.4 103.6,1.3 102.5,2.2 101.5,2.9 100.6,4.2 100.3,5.8"))}"/>`,`<path class="ctx" d="${pl("141,-2.6 142.0,-3.0 142.6,-3.2 142.6,-9.6 141.5,-9.3 141,-9.1")}"/>`].join("");
+ $("#wl").setAttribute("d",sm(px("122.0,5.5 120.0,3.0 118.3,0.5 117.5,-2.5 116.6,-5.5 115.8,-8.3 115.8,-10.8"),0));
+ const w=px("122.8,5.9")[0];$("#wt").setAttribute("x",w[0]);$("#wt").setAttribute("y",w[1]);
+ const T=(a,c)=>a.map(([t,lo,la])=>`<text class="${c}" x="${f1((lo-94.5)*17.2)}" y="${f1((7.2-la)*17.2)}">${t}</text>`).join("");
+ $("#sea").innerHTML=T(SEA,"sea");$("#lb").innerHTML=T(LB,"lbl");
+ const seen={};$("#map").innerHTML=ISL.map(([r,t])=>{const first=!seen[r];seen[r]=1;return `<path class="isl" data-r="${r}" ${first?`tabindex="0" role="button" aria-label="${R[r][0]}"`:""} d="${sm(px(t))}"/>`}).join("");
+ $("#map").onclick=e=>{const p=e.target.closest(".isl");if(p)pick(p.dataset.r)};
+ $("#map").onkeydown=e=>{const p=e.target.closest(".isl");if(p&&(e.key=="Enter"||e.key==" ")){e.preventDefault();pick(p.dataset.r)}};
+ const by={};S.forEach((x,i)=>(by[x.r[0]]=by[x.r[0]]||[]).push(i));let h="";
+ for(const k in by){const L=by[k],n=L.length,an=AN[k]&&px(AN[k]);L.forEach((i,j)=>{let x,y;if(k=="jawa"){const t=(j+.5)/n;x=(106.0+8.2*t-94.5)*17.2;y=(7.2+6.9+1.1*t)*17.2-0;y=(7.2-(-6.9-1.1*t))*17.2+(j%2?5:-5)}else{const a=an[j%an.length],o=PT[Math.floor(j/an.length)%9];x=a[0]+o[0];y=a[1]+o[1]}
+ h+=`<text class="ic" data-i="${i}" x="${f1(x)}" y="${f1(y)}" tabindex="0" role="button" aria-label="${S[i].n}"><title>${S[i].n}</title>${S[i].e}</text>`})}
+ $("#ic").innerHTML=h;document.querySelectorAll(".ic").forEach(t=>{t.onclick=()=>openSp(t.dataset.i);t.onkeydown=e=>{if(e.key=="Enter"||e.key==" "){e.preventDefault();openSp(t.dataset.i)}}})}
+const ST={CR:"Kritis: risiko sangat tinggi punah di alam liar.",EN:"Terancam: risiko tinggi punah di alam liar.",VU:"Rentan: berisiko punah bila ancaman berlanjut.",LC:"Risiko rendah: belum tergolong terancam saat ini.",Beragam:"Kelompok banyak jenis, status tiap jenis berbeda.",Dilindungi:"Dilindungi oleh peraturan di Indonesia.",Langka:"Dianggap langka, status resmi bervariasi.",Dimanfaatkan:"Dimanfaatkan manusia, tidak ada status khusus di data ini."};
+const SR={CR:.035,EN:.045,VU:.06,LC:.08};
+function sim(x,y,h,p,c){const r=(SR[x.st]||.06)*(1+.2*c);let N=100;const o=[N];for(let t=1;t<=y;t++){const K=150*Math.pow(1-h/100,t);N=Math.max(0,N+r*N*(1-N/K)-N*(p/100)*(1-.07*c));if(N<1)N=0;o.push(N)}return o}
+function runSim(){const x=S[$("#ss").value],y=+$("#sy").value,h=+$("#sh").value,p=+$("#sp").value,c=+$("#sc").value;
+ $("#vy").textContent=y;$("#vh").textContent=h;$("#vp").textContent=p;$("#vc").textContent=c;
+ const a=sim(x,y,h,p,c),b=sim(x,y,0,0,0),m=Math.max(160,...a,...b),W=640,H=260,L=44,B=34,T=12,R=12;
+ const X=t=>L+(W-L-R)*t/y,Y=v=>T+(H-T-B)*(1-v/m);let g="";
+ for(let k=0;k<=4;k++){const v=m*k/4;g+=`<line class="gr2" x1="${L}" x2="${W-R}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/><text class="ax" x="${L-6}" y="${(Y(v)+4).toFixed(1)}" text-anchor="end">${Math.round(v)}</text>`}
+ for(let k=0;k<=5;k++){const t=Math.round(y*k/5);g+=`<text class="ax" x="${X(t).toFixed(1)}" y="${H-16}" text-anchor="middle">${t}</text>`}
+ g+=`<text class="ax" x="${(L+W)/2}" y="${H-2}" text-anchor="middle">Tahun ke-</text>`;
+ const pl=r=>r.map((v,t)=>X(t).toFixed(1)+","+Y(v).toFixed(1)).join(" ");
+ g+=`<polyline points="${pl(b)}" fill="none" stroke="var(--mute)" stroke-width="2" stroke-dasharray="6 5"/><polyline points="${pl(a)}" fill="none" stroke="var(--acc)" stroke-width="3"/>`;
+ $("#ch").innerHTML=g;
+ const fin=a[y],ch=Math.round(fin-100),ex=a.findIndex(v=>v==0);
+ const hh=sim(x,y,h,0,c)[y],pp=sim(x,y,0,p,c)[y];
+ let v=fin>=100?"Populasi bertahan atau bertambah.":fin>=50?"Populasi menurun, tetapi masih bertahan.":ex>0?`Populasi punah lokal pada tahun ke-${ex}.`:"Populasi turun tajam dan berisiko punah lokal.";
+ let f=h==0&&p==0?"Tidak ada tekanan yang diatur.":hh<pp?"hilangnya habitat lebih menekan daripada perburuan pada pengaturan ini.":pp<hh?"perburuan dan perdagangan lebih menekan daripada hilangnya habitat pada pengaturan ini.":"kedua tekanan sama kuat.";
+ if(h>0||p>0)f="Faktor paling menekan: "+f;
+ $("#res").innerHTML=`<p><b>${x.e} ${x.n}</b> (${x.st}): indeks populasi menjadi <b>${Math.round(fin)}</b> setelah ${y} tahun (${ch>=0?"+":""}${ch}%).</p><p>${v}</p><p>${f}</p><p class="note">Dalam model ini spesies berstatus CR dan EN pulih lebih lambat. Naikkan upaya konservasi untuk melihat bagaimana perlindungan habitat dan penegakan hukum memperlambat penurunan.</p>`}
+function goSim(i){dlg.close();$("#ss").value=i;runSim();$("#sim").scrollIntoView({behavior:"smooth",block:"start"})}
+$("#ss").innerHTML=S.map((x,i)=>`<option value="${i}">${x.e} ${x.n} (${R[x.r[0]][0]})</option>`).join("");
+["sy","sh","sp","sc","ss"].forEach(k=>$("#"+k).oninput=runSim);
+document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{const q=b.dataset.p.split(",");$("#sh").value=q[0];$("#sp").value=q[1];$("#sc").value=q[2];runSim()});
+drawMap();render();runSim();
+</script>
+</body>
+</html>
